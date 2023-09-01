@@ -1,2 +1,4 @@
 # parallel-racers
-Code to share across machines and test different languages and parallelization strategies
+🏎️💨 Go go speed racer 
+👾👨‍💻 Write Makefile commands and make on different architectures
+📖📝 Use the Wiki to write up the results
