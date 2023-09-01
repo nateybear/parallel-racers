@@ -55,7 +55,7 @@ const as, is = repeat.(raw, multiple)
 
 ##### Likelihood Function
 
-function likelihood(params)
+function likelihood(params) 
     v₀, v₁ = findFixedPoint(params)
 
     # NOTE: threading out instead of brodcasting (.*) means
