@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "threads,multiple,elapsed_time" 
+echo "cores,multiple,elapsed_time" 
 # Function to run Julia command and convert output to CSV
 run_julia() {
     local threads=$1

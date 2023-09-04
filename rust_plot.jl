@@ -3,7 +3,7 @@ import Cairo, Fontconfig
 
 df = @chain stdin begin
     CSV.read(DataFrame)
-    groupby([:threads, :multiple])
+    groupby([:cores, :multiple])
     @combine(
         :elapsed_time = mean(:elapsed_time),
         :ymin = mean(:elapsed_time) - std(:elapsed_time),
@@ -17,7 +17,7 @@ p = plot(
         y=:elapsed_time,
         ymin=:ymin,
         ymax=:ymax,
-        color=:threads,
+        color=:cores,
         Geom.line,
         Geom.point,
         Geom.errorbar,
