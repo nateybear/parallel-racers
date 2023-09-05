@@ -76,13 +76,14 @@ function findFixedPoint((θ, R), tol=1e-7)
     end
 end
 
+const fp = findFixedPoint([-1.0, -3.0])
 
 ##### Likelihood Function
 
 # this is shared everywhere
 function likelihood((v₀, v₁), (a, i))
     p = cdf.(Logistic(), v₁[a] .- v₀[a])
-
+    
     @. i * log(p) + (1 - i) * log(1 - p)
 end
 
@@ -90,10 +91,10 @@ end
 # memory efficient because of batching over
 # an iterator
 function likelihood(params, out::SharedArray)
-    fp = findFixedPoint(params)
-
+    # get the list of workers we can dispatch to
     w = procs(out)
 
+    # partition the data into batches, one batch per worker
     batches = @chain begin
         Base.OneTo(multiple)
         partition(_, ceil(Int, length(_) / length(w)))
@@ -101,8 +102,11 @@ function likelihood(params, out::SharedArray)
         enumerate
     end
 
+    # save the futures here
     futures = Future[]
 
+    # asynchoronously push off and materialize
+    # N * batch_size observations per worker
     for (iworker, idata) in batches
         f = @spawnat w[iworker] begin
             l = @chain raw begin
@@ -111,12 +115,13 @@ function likelihood(params, out::SharedArray)
                 collect.()
                 likelihood(fp, _)
             end
-
+            
             out[iworker] = sum(l)
         end
         push!(futures, f)
     end
 
+    # here we wait for the futures we just created
     for f in futures
         wait(f)
     end
