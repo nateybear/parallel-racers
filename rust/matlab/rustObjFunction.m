@@ -6,7 +6,7 @@ clear; clc;
 % ------------------------------------------------ %
 
 % Size of pool 
-P = 2;
+P = 16;
 
 % number of runs 
 N = 10;
@@ -71,7 +71,7 @@ CCP_0 = 1- CCP_1;
 % --- Evaluate LL --- %
 % ------------------- %
 
-data  = load("./data/data.asc");
+data  = load("..\data.asc");
 a_obs_raw = data(:,1); 
 i_obs_raw = data(:,2);
 
@@ -81,7 +81,6 @@ dupVector = [1, 10, 100, 1000, 10000];
 t_out = zeros(size(dupVector, 2), 3);
 
 for j = 1:size(dupVector,2)
-    print(j); 
     a_obs = kron(ones(dupVector(j), 1), a_obs_raw);
     i_obs = kron(ones(dupVector(j), 1), i_obs_raw);
     % run many times to get a mean of run times 
@@ -118,7 +117,7 @@ for i = 1:3
 end 
 outTbl = array2table(out);
 outTbl.Properties.VariableNames = {'Method', 'Size', 'Elapsed'}; 
-outName = strcat('./out/matlab_', 'P', string(P), '_N', string(N), '.csv');
+outName = strcat('..\out\matlab_', 'P', string(P), '_N', string(N), '.csv');
 writetable(outTbl, outName)
 
 % close out pool 
