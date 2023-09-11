@@ -31,9 +31,6 @@ read_dat(f::String) = @pipe readlines(f) .|>
 const raw = @pipe read_dat("../data.asc") .|> convert(Int8, _) |> eachcol
 const N = (first ∘ size ∘ first)(raw)
 
-#### SAVE THE FIXED POINT AND USE EVERYWHERE
-include("findFixedPoint.jl")
-
 
 #### INCLUDE THE MULTIPROC LIKELIHOOD
 include("likelihood_procs.jl")

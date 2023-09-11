@@ -13,6 +13,8 @@
     using Pipe: @pipe
     using Chain: @chain
     using PartialFunctions
+
+    include("findFixedPoint.jl")
 end
 
 likelihood((as, is)) = let d = collect(zip(as, is))
