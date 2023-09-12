@@ -1,16 +1,11 @@
-import numpy as np
-import pandas as pd
-import math
-from datetime import datetime
-from numpy import linalg as la
-from multiprocessing import Pool
-import timeit
+################################################################################
+### Call this program to solve DP and compute CCPs given guess of parameters ###
+################################################################################
 
 ## set decimal float
 
 float_formatter = "{:.4f}".format
 np.set_printoptions(formatter={'float_kind':float_formatter})
-
 
 '''
 set parameters
@@ -55,8 +50,8 @@ dat_7 = datagen(dat,4)
 
 dat_list = [dat_3,dat_4,dat_5,dat_6,dat_7]
 
-mult = 10000
-dat_big = np.block([[dat]]*mult)
+# mult = 10000
+# dat_big = np.block([[dat]]*mult)
 
 ## timer stop and print runtime
 stop_t0 = timeit.default_timer()
