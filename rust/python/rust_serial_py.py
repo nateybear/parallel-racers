@@ -1,5 +1,13 @@
+import numpy as np
+import pandas as pd
+import math
+from datetime import datetime
+from numpy import linalg as la
+import timeit
+
+
 '''
-Call packages, data generation and value function iteration (assuming "rust_data_DP_py.py" is in the same folder)
+Call data generation and value function iteration (assuming "rust_data_DP_py.py" is in the same folder)
 '''
 
 with open("rust_data_DP_py.py") as f:
