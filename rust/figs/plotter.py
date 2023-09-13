@@ -16,7 +16,7 @@ for i in range(len(P)):
     dfM = pd.read_csv("../out/matlab_P{}_N10.csv".format(P[i]))
     dfM['P'] = P[i]
     # pull the python file 
-    dfP = pd.read_csv("../out/matlab_P{}_N10.csv".format(P[i]))
+    dfP = pd.read_csv("../out/results_py_p{}.csv".format(P[i]))
     dfP['P'] = P[i]
     # store in a tuple 
     dfls[i] = (dfJ, dfM, dfP)
@@ -25,7 +25,9 @@ for i in range(len(P)):
 dfJ = pd.concat([tup[0] for tup in dfls]).reset_index(drop = True)
 dfM = pd.concat([tup[1] for tup in dfls]).reset_index(drop = True)
 dfP = pd.concat([tup[2] for tup in dfls]).reset_index(drop = True)
-# adjust coded variables 
+# adjust col names for python  
+dfP.columns = dfM.columns 
+
 
 # {1:"Vectorized", 2:"Serial", 3:"ParFor"}
 dfJV =  dfJ[dfJ.method == 1].groupby('size')['elapsed'].mean().reset_index()
@@ -61,9 +63,9 @@ plt.savefig("./vectorizedRT.pdf",bbox_inches='tight',format= "pdf",dpi=600)
 
 # --- Normalized by best parallel --- #
 fig, ax = plt.subplots(figsize=(6.4, 4.8*(1.6/2)))
-plt.plot(np.log10(dfJV['size']), dfJV.elapsed/dfJ[dfJ.method != 1].groupby('size')['elapsed'].min().values, label = "Julia",  ls = linetypes[0], color = palette[0], lw=3)
-plt.plot(np.log10(dfMV.Size), dfMV.Elapsed/dfM[dfM.Method != 1].groupby('Size')['Elapsed'].min().values, label = "Matlab", ls = linetypes[1], color = palette[2], lw=3)
-plt.plot(np.log10(dfPV.Size), dfPV.Elapsed/dfP[dfP.Method != 1].groupby('Size')['Elapsed'].min().values, label = "Python", ls = linetypes[2], color = palette[3], lw=3)
+plt.plot(np.log10(dfJV['size']), dfJV.elapsed/dfJ[dfJ.method == 3].groupby('size')['elapsed'].min().values, label = "Julia",  ls = linetypes[0], color = palette[0], lw=3)
+plt.plot(np.log10(dfMV.Size), dfMV.Elapsed/dfM[dfM.Method == 3].groupby('Size')['Elapsed'].min().values, label = "Matlab", ls = linetypes[1], color = palette[2], lw=3)
+plt.plot(np.log10(dfPV.Size), dfPV.Elapsed/dfP[dfP.Method == 3].groupby('Size')['Elapsed'].min().values, label = "Python", ls = linetypes[2], color = palette[3], lw=3)
 L  = plt.legend()
 plt.setp(L.texts, family='Liberation Serif', fontsize = 12) 
 plt.xlabel(r'$\log(N)$', **csfont)
@@ -133,3 +135,4 @@ plt.axhline(y=1, color = palette[5], linestyle=':', lw = 2)
 plt.yticks(fontname = "Liberation Serif", fontsize = 14)
 plt.xticks([3,4,5,6,7],fontname = "Liberation Serif", fontsize = 14)
 # plt.show()
+plt.savefig("./pythonNormParFor.pdf",bbox_inches='tight',format= "pdf",dpi=600)
