@@ -58,9 +58,7 @@ Method 1: vectorized application to compute LL
 def vect_ll(df):
     a_t = df[:,0]
     i_t = df[:,1]
-    log_like = np.zeros(a_t.shape[0])
-    for t in range(a.shape[0]):
-        log_like[a_t==(t+1)] = -np.log((i_t[a_t==(t+1)] * CCP[t]) + ((1-i_t[a_t==(t+1)]) * (1-CCP[t])))
+    log_like = -np.log((i_t * CCP[a_t.astype(int) - 1]) + ((1-i_t) * (1-CCP[a_t.astype(int) - 1])))
     return log_like
         
 results_1 = results_1(results_temp.copy())
