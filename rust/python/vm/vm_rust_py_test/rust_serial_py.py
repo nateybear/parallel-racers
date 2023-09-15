@@ -1,5 +1,13 @@
+import numpy as np
+import pandas as pd
+import math
+from datetime import datetime
+from numpy import linalg as la
+import timeit
+
+
 '''
-Call packages, data generation and value function iteration (assuming "rust_data_DP_py.py" is in the same folder)
+Call data generation and value function iteration (assuming "rust_data_DP_py.py" is in the same folder)
 '''
 
 with open("rust_data_DP_py.py") as f:
@@ -47,12 +55,11 @@ def results_2(results):
 '''
 Method 1: vectorized application to compute LL
 '''
+
 def vect_ll(df):
     a_t = df[:,0]
     i_t = df[:,1]
-    log_like = np.zeros(a_t.shape[0])
-    for t in range(a.shape[0]):
-        log_like[a_t==(t+1)] = -np.log((i_t[a_t==(t+1)] * CCP[t]) + ((1-i_t[a_t==(t+1)]) * (1-CCP[t])))
+    log_like = -np.log((i_t * CCP[a_t.astype(int)-1]) + ((1-i_t) * (1-CCP[a_t.astype(int)-1])))
     return log_like
         
 results_1 = results_1(results_temp.copy())
@@ -62,7 +69,6 @@ results_1.to_csv(r'outputs/results1.csv',index=False)
 '''
 Method 2: serial for-loop
 '''
-## TRY NUMBA OR JNP for jit
 
 def serial_ll(df):
     log_like = np.zeros(df.shape[0])
