@@ -41,7 +41,7 @@ const LIKELIHOOD_FILES = [
 const df = DataFrame(method=UInt8[], elapsed=Float64[], size=Int64[])
 
 for (i, f) in enumerate(LIKELIHOOD_FILES),
-    multiple in [1, 10, 100, 1000, 10000]
+    multiple in [1, 10, 100, 1000, 10000, 100000]
 
     include(f)
     @info "Running $f with multiple=$multiple"

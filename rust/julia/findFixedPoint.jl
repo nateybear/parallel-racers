@@ -37,4 +37,6 @@ function findFixedPoint((θ, R), tol=1e-7)
     end
 end
 
-const v₀, v₁ = findFixedPoint([-1.0, -3.0])
+findFixedPoint() = findFixedPoint([-1.0, -3.0] .+ randn(2))
+
+v₀, v₁ = findFixedPoint()

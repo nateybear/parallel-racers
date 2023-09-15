@@ -19,7 +19,7 @@ end
 
 likelihood((as, is)) = let d = collect(zip(as, is))
     @sync @distributed (+) for (a, i) in d
-        p = cdf(Logistic(), v₁[a] - v₀[a])
+        p = cdf(Logistic(), v₁[a] - v₀[a] + rand())
         i * log(p) + (1 - i) * log(1 - p)
     end
 end
