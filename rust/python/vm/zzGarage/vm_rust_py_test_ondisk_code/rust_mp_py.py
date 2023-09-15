@@ -23,40 +23,31 @@ Method 3: multiprocess pool
 ## https://stackoverflow.com/questions/31858352/why-does-pool-run-the-entire-file-multiple-times
 ## might need to break this into multiple programs????
 
-
-# def read_data():
-#     # ## read in conditional (choice specific) value functions
-#     # CVFs = pd.read_csv(r'inputs/CVFs.csv')
-#     # V1_new = CVFs['V1'].values
-#     # V0_new = CVFs['V0'].values
-
-#     ## read in data and put in dat_list
-
-#     dat_3 = pd.read_csv(r'inputs/df_order3.csv').values
-#     dat_4 = pd.read_csv(r'inputs/df_order4.csv').values
-#     dat_5 = pd.read_csv(r'inputs/df_order5.csv').values
-#     dat_6 = pd.read_csv(r'inputs/df_order6.csv').values
-#     dat_7 = pd.read_csv(r'inputs/df_order7.csv').values
-#     # dat_8 = pd.read_csv(r'inputs/df_order8.csv').values
-
-#     # dat_list = [dat_3,dat_4,dat_5,dat_6,dat_7,dat_8]
-#     dat_list = [dat_3,dat_4,dat_5,dat_6,dat_7]
-
-#     return dat_list
-
-
-## need to read in choice-specific value functions globally, to use in par_ll (since cannot feed multiple inputs to par_ll)
-## it will be re-run in pool, but the import is quick, and better than doing it within par_ll itself (which then runs it for every iteration)
-## I think, this way, it just runs for each child process
-
-## datagen can still be done in main so it doesn't duplicate
-
-# with open("rust_VFI_py.py") as f:
+# with open("rust_data_DP_py.py") as f:
 #     exec(f.read())
 
-CVFs = pd.read_csv(r'inputs/CVFs.csv')
-V1_new = CVFs['V1'].values
-V0_new = CVFs['V0'].values
+## put open above in if name = main and reset rust_DP to output the value functions and dat_list, also remove 10^8, it seemed like there was gains before that, now not seeing anything remotely like gains
+
+
+def read_data():
+    # ## read in conditional (choice specific) value functions
+    # CVFs = pd.read_csv(r'inputs/CVFs.csv')
+    # V1_new = CVFs['V1'].values
+    # V0_new = CVFs['V0'].values
+
+    ## read in data and put in dat_list
+
+    dat_3 = pd.read_csv(r'inputs/df_order3.csv').values
+    dat_4 = pd.read_csv(r'inputs/df_order4.csv').values
+    dat_5 = pd.read_csv(r'inputs/df_order5.csv').values
+    dat_6 = pd.read_csv(r'inputs/df_order6.csv').values
+    dat_7 = pd.read_csv(r'inputs/df_order7.csv').values
+    # dat_8 = pd.read_csv(r'inputs/df_order8.csv').values
+
+    # dat_list = [dat_3,dat_4,dat_5,dat_6,dat_7,dat_8]
+    dat_list = [dat_3,dat_4,dat_5,dat_6,dat_7]
+
+    return dat_list
 
 ##########################################
 ## Define functions for parallelization ##
@@ -64,6 +55,11 @@ V0_new = CVFs['V0'].values
 
 ## parallelized log likelihood, computing CCPs within loop to make it take as long as possible
 def par_ll(at_it):
+    ## read in conditional (choice specific) value functions
+    CVFs = pd.read_csv(r'inputs/CVFs.csv')
+    V1_new = CVFs['V1'].values
+    V0_new = CVFs['V0'].values
+
     ## compute CCPs and likelihood
     a_t = at_it[0]
     i_t = at_it[1]
@@ -102,32 +98,14 @@ def rust_mp(dat_list,results,n_processes):
     results.to_csv(f'outputs\\results3_p{n_processes}.csv',index=False)
 
 
-## better way to call the non-definitional arguments is like this, but it doesn't work to define dat_list to call in if name == main
-# def main(argv):  
-#     with open("rust_datagen_py.py") as f:
-#         exec(f.read())
 
-#     #######################
-#     ## define results df ##
-#     #######################
+def main(argv):
+    
 
-#     results_3 = pd.DataFrame(np.zeros((len(dat_list),3)),columns=['Method','Size (N)', 'Elapsed (s)'])
+    
+#     # V1_new, V0_new, dat_list = read_data()
 
-#     ###########################################################
-#     ## call multiprocess likelihood computation for dat_list ##
-#     ###########################################################
-
-#     rust_mp(dat_list,results_3,n_processes=2)
-#     rust_mp(dat_list,results_3,n_processes=4)
-#     rust_mp(dat_list,results_3,n_processes=8)
-#     rust_mp(dat_list,results_3,n_processes=16)
-
-
-if __name__ == '__main__':
-    # main(sys.argv)
-
-    with open("rust_datagen_py.py") as f:
-        exec(f.read())
+    dat_list = read_data()
 
     #######################
     ## define results df ##
@@ -143,3 +121,46 @@ if __name__ == '__main__':
     rust_mp(dat_list,results_3,n_processes=4)
     rust_mp(dat_list,results_3,n_processes=8)
     rust_mp(dat_list,results_3,n_processes=16)
+
+
+if __name__ == '__main__':
+    main(sys.argv)
+
+
+    # dat_list = read_data()
+
+    # #######################
+    # ## define results df ##
+    # #######################
+
+    # results_3 = pd.DataFrame(np.zeros((len(dat_list),3)),columns=['Method','Size (N)', 'Elapsed (s)'])
+
+    # ###########################################################
+    # ## call multiprocess likelihood computation for dat_list ##
+    # ###########################################################
+
+    # rust_mp(dat_list,results_3,n_processes=2)
+    # rust_mp(dat_list,results_3,n_processes=4)
+    # rust_mp(dat_list,results_3,n_processes=8)
+    # rust_mp(dat_list,results_3,n_processes=16)
+
+    ##################
+    ## call in data ##
+    ##################
+
+    # V1_new, V0_new, dat_list = read_data()
+
+    # #######################
+    # ## define results df ##
+    # #######################
+
+    # results_3 = pd.DataFrame(np.zeros((len(dat_list),3)),columns=['Method','Size (N)', 'Elapsed (s)'])
+
+    # ###########################################################
+    # ## call multiprocess likelihood computation for dat_list ##
+    # ###########################################################
+
+    # rust_mp(dat_list,results_3,n_processes=2)
+    # rust_mp(dat_list,results_3,n_processes=4)
+    # rust_mp(dat_list,results_3,n_processes=8)
+    # rust_mp(dat_list,results_3,n_processes=16)

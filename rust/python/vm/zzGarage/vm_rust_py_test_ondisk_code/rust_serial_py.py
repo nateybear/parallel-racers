@@ -18,20 +18,16 @@ CVFs = pd.read_csv(r'inputs/CVFs.csv')
 V1_new = CVFs['V1'].values
 V0_new = CVFs['V0'].values
 
-## read in datagen program
-with open("rust_datagen_py.py") as f:
-    exec(f.read())
+## read in data and put in dat_list
 
-# dat_3 = pd.read_csv(r'inputs/df_order3.csv').values
-# dat_4 = pd.read_csv(r'inputs/df_order4.csv').values
-# dat_5 = pd.read_csv(r'inputs/df_order5.csv').values
-# dat_6 = pd.read_csv(r'inputs/df_order6.csv').values
-# dat_7 = pd.read_csv(r'inputs/df_order7.csv').values
-# dat_8 = pd.read_csv(r'inputs/df_order8.csv').values
+dat_3 = pd.read_csv(r'inputs/df_order3.csv').values
+dat_4 = pd.read_csv(r'inputs/df_order4.csv').values
+dat_5 = pd.read_csv(r'inputs/df_order5.csv').values
+dat_6 = pd.read_csv(r'inputs/df_order6.csv').values
+dat_7 = pd.read_csv(r'inputs/df_order7.csv').values
+dat_8 = pd.read_csv(r'inputs/df_order8.csv').values
 
-# dat_list = [dat_3,dat_4,dat_5,dat_6,dat_7,dat_8]
-
-
+dat_list = [dat_3,dat_4,dat_5,dat_6,dat_7,dat_8]
 
 '''
 Results DFs and function

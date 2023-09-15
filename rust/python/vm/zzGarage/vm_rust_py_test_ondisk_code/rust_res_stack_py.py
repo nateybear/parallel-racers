@@ -4,8 +4,8 @@ import subprocess
 
 
 
-# Run the VFI script
-subprocess.run(["python", "rust_VFI_py.py"])
+# Run the data generation and VFI script
+subprocess.run(["python", "rust_data_DP_py.py"])
 
 # Run the implicit parallelization and serial script
 subprocess.run(["python", "rust_serial_py.py"])
