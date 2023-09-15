@@ -1,19 +1,5 @@
 import numpy as np
 import pandas as pd
-import subprocess
-
-
-
-# Run the VFI script
-subprocess.run(["python", "rust_VFI_py.py"])
-
-# Run the implicit parallelization and serial script
-subprocess.run(["python", "rust_serial_py.py"])
-
-# Run the multiprocess
-subprocess.run(["python", "rust_mp_py.py"])
-
-
 
 def concat_res(n_processes):
     results_1 = pd.read_csv(r'outputs/results1.csv')
