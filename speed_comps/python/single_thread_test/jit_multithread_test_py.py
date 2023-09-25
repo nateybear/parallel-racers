@@ -9,13 +9,14 @@ Try single thread, regular numpy, 16 thread (one per core)
 # import thread environment controls
 # from os import environ
 # environ['OMP_NUM_THREADS'] = '1'
-
+from numba import jit
 import timeit
 import numpy as np
 import pandas as pd
 
 ## define test functions
 
+@jit
 def rng(n):
     tic = timeit.default_timer()
     a = np.random.rand(n)
@@ -23,6 +24,7 @@ def rng(n):
     sec = toc - tic
     return a, sec
 
+@jit
 def square_py(a):
     tic = timeit.default_timer()
     x = a**2
@@ -30,6 +32,7 @@ def square_py(a):
     sec = toc - tic
     return sec
 
+@jit
 def square_np(a):
     tic = timeit.default_timer()
     x = np.square(a)
@@ -37,6 +40,7 @@ def square_np(a):
     sec = toc - tic
     return sec
 
+@jit
 def exp(a):
     tic = timeit.default_timer()
     x = np.exp(a)
@@ -44,6 +48,7 @@ def exp(a):
     sec = toc - tic
     return sec
 
+@jit
 def cube1(a):
     tic = timeit.default_timer()
     x = a**3
@@ -51,6 +56,7 @@ def cube1(a):
     sec = toc - tic
     return sec
 
+@jit
 def cube2(a):
     tic = timeit.default_timer()
     x = (a**2)*a
@@ -58,6 +64,7 @@ def cube2(a):
     sec = toc - tic
     return sec
 
+@jit
 def cube3(a):
     tic = timeit.default_timer()
     x = np.square(a)*a
@@ -65,6 +72,7 @@ def cube3(a):
     sec = toc - tic
     return sec
 
+@jit
 def Q1(a):
     tic = timeit.default_timer()
     x = a**4
@@ -72,6 +80,7 @@ def Q1(a):
     sec = toc - tic
     return sec
 
+@jit
 def Q2(a):
     tic = timeit.default_timer()
     b = a**2
@@ -80,6 +89,7 @@ def Q2(a):
     sec = toc - tic
     return sec
 
+@jit
 def Q3(a):
     tic = timeit.default_timer()
     x = np.square(a)*np.square(a)
@@ -87,6 +97,7 @@ def Q3(a):
     sec = toc - tic
     return sec
 
+@jit
 def atoa(a):
     tic = timeit.default_timer()
     x = a**a
@@ -94,6 +105,7 @@ def atoa(a):
     sec = toc - tic
     return sec
 
+@jit
 def expcube1(a):
     tic = timeit.default_timer()
     x = np.exp(a**3)
@@ -101,6 +113,7 @@ def expcube1(a):
     sec = toc - tic
     return sec
 
+@jit
 def expcube2(a):
     tic = timeit.default_timer()
     x = np.exp((a**2)*a)
@@ -108,6 +121,7 @@ def expcube2(a):
     sec = toc - tic
     return sec
 
+@jit
 def expcube3(a):
     tic = timeit.default_timer()
     x = np.exp(np.square(a)*a)
@@ -118,6 +132,7 @@ def expcube3(a):
 
 ## call (14) test functions, iter times, for n (1 bill) obs, and average over run times
 
+@jit
 def thread_test(iter,n):
     results_iter = np.zeros((14,iter))
     for t in range(iter):
@@ -139,7 +154,7 @@ def thread_test(iter,n):
     results_df = pd.DataFrame(['rng','square_py','square_np','exp','cube1','cube2','cube3','Q1','Q2','Q3','atoa','expcube1','expcube2','expcube3'],columns=['test'])
     results_df['multithread_s'] = np.mean(results_iter,axis=1)
 
-    results_df.to_csv(r'interim/results_multi.csv',index=False)
+    results_df.to_csv(r'interim/results_multi_jit.csv',index=False)
     
     return results_df
 
