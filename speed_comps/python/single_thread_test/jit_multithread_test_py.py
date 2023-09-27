@@ -194,20 +194,20 @@ def thread_test(iter,n):
         tic_15 = timeit.default_timer()
         x15 = expcube2(a)
         toc_15 = timeit.default_timer()
-        results_iter[15,t] = toc_12 - tic_12    
+        results_iter[15,t] = toc_15 - tic_15    
 
-        tic_13 = timeit.default_timer()
-        x13 = expcube3(a)
-        toc_13 = timeit.default_timer()
-        results_iter[13,t] = toc_13 - tic_13  
+        tic_16 = timeit.default_timer()
+        x16 = expcube3(a)
+        toc_16 = timeit.default_timer()
+        results_iter[16,t] = toc_16 - tic_16  
 
-        tic_13 = timeit.default_timer()
-        x13 = expcube4(a)
-        toc_13 = timeit.default_timer()
-        results_iter[13,t] = toc_13 - tic_13   
+        tic_17 = timeit.default_timer()
+        x17 = expcube4(a)
+        toc_17 = timeit.default_timer()
+        results_iter[17,t] = toc_17 - tic_17   
 
 
-    results_df = pd.DataFrame(['rng','square1','square2','exp','cube1','cube2','cube3','Q1','Q2','Q3','atoa','expcube1','expcube2','expcube3'],columns=['test'])
+    results_df = pd.DataFrame(['rng','square1','square2','square3','exp','cube1','cube2','cube3','cube4','Q1','Q2','Q3','Q4','atoa','expcube1','expcube2','expcube3','expcube4'],columns=['test'])
     results_df['jit_multithread_default_s'] = np.mean(results_iter,axis=1)
 
     results_df.to_csv(r'interim/results_multi_jit.csv',index=False)
@@ -215,5 +215,6 @@ def thread_test(iter,n):
     return results_df
 
 results_df = thread_test(iter=10,n=1000000000)
+# results_df = thread_test(iter=10,n=100)
 
 
