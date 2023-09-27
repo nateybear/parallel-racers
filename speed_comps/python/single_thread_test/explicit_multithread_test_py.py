@@ -6,11 +6,11 @@ See: https://superfastpython.com/multithreaded-numpy-functions/
 Determine which operations slow down due to forced single-threading vs. not
 Try single thread, regular numpy, 16 thread (one per core)
 
-in this version, use default number of threads
+in this version, use explicitly stated 16 threads
 '''
 # import thread environment controls
-# from os import environ
-# environ['OMP_NUM_THREADS'] = '1'
+from os import environ
+environ['OMP_NUM_THREADS'] = '16'
 
 import timeit
 import numpy as np
@@ -154,26 +154,26 @@ def thread_test(iter,n):
         a, results_iter[0,t] = rng(n)
         results_iter[1,t] = square1(a)
         results_iter[2,t] = square2(a)
-        results_iter[3,t] = square3(a)
-        results_iter[4,t] = exp(a)
-        results_iter[5,t] = cube1(a)
-        results_iter[6,t] = cube2(a)
-        results_iter[7,t] = cube3(a)
-        results_iter[8,t] = cube4(a)
-        results_iter[9,t] = Q1(a)
-        results_iter[10,t] = Q2(a)
-        results_iter[11,t] = Q3(a)
-        results_iter[12,t] = Q4(a)
-        results_iter[13,t] = atoa(a)
-        results_iter[14,t] = expcube1(a)
-        results_iter[15,t] = expcube2(a)
-        results_iter[16,t] = expcube3(a)
-        results_iter[17,t] = expcube4(a)
+        results_iter[2,t] = square2(a)
+        results_iter[3,t] = exp(a)
+        results_iter[4,t] = cube1(a)
+        results_iter[5,t] = cube2(a)
+        results_iter[6,t] = cube3(a)
+        results_iter[6,t] = cube3(a)
+        results_iter[7,t] = Q1(a)
+        results_iter[8,t] = Q2(a)
+        results_iter[9,t] = Q3(a)
+        results_iter[9,t] = Q3(a)
+        results_iter[10,t] = atoa(a)
+        results_iter[11,t] = expcube1(a)
+        results_iter[12,t] = expcube2(a)
+        results_iter[13,t] = expcube3(a)
+        results_iter[13,t] = expcube3(a)
 
     results_df = pd.DataFrame(['rng','square1','square2','square3','exp','cube1','cube2','cube3','cube4','Q1','Q2','Q3','Q4','atoa','expcube1','expcube2','expcube3','expcube4'],columns=['test'])
-    results_df['multithread_default_s'] = np.mean(results_iter,axis=1)
+    results_df['multithread_16_s'] = np.mean(results_iter,axis=1)
 
-    results_df.to_csv(r'interim/results_multi.csv',index=False)
+    results_df.to_csv(r'interim/results_multi_16.csv',index=False)
     
     return results_df
 

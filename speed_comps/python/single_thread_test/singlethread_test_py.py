@@ -23,16 +23,23 @@ def rng(n):
     sec = toc - tic
     return a, sec
 
-def square_py(a):
+def square1(a):
     tic = timeit.default_timer()
     x = a**2
     toc = timeit.default_timer()
     sec = toc - tic
     return sec
 
-def square_np(a):
+def square2(a):
     tic = timeit.default_timer()
     x = np.square(a)
+    toc = timeit.default_timer()
+    sec = toc - tic
+    return sec
+
+def square3(a):
+    tic = timeit.default_timer()
+    x = a*a
     toc = timeit.default_timer()
     sec = toc - tic
     return sec
@@ -65,6 +72,13 @@ def cube3(a):
     sec = toc - tic
     return sec
 
+def cube4(a):
+    tic = timeit.default_timer()
+    x = a*a*a
+    toc = timeit.default_timer()
+    sec = toc - tic
+    return sec
+
 def Q1(a):
     tic = timeit.default_timer()
     x = a**4
@@ -83,6 +97,13 @@ def Q2(a):
 def Q3(a):
     tic = timeit.default_timer()
     x = np.square(a)*np.square(a)
+    toc = timeit.default_timer()
+    sec = toc - tic
+    return sec
+
+def Q4(a):
+    tic = timeit.default_timer()
+    x = a*a*a*a
     toc = timeit.default_timer()
     sec = toc - tic
     return sec
@@ -115,28 +136,40 @@ def expcube3(a):
     sec = toc - tic
     return sec
 
+def expcube4(a):
+    tic = timeit.default_timer()
+    x = np.exp(a*a*a)
+    toc = timeit.default_timer()
+    sec = toc - tic
+    return sec
+
+
 
 ## call (14) test functions, iter times, for n (1 bill) obs, and average over run times
 
 def thread_test(iter,n):
-    results_iter = np.zeros((14,iter))
+    results_iter = np.zeros((18,iter))
     for t in range(iter):
         a, results_iter[0,t] = rng(n)
-        results_iter[1,t] = square_py(a)
-        results_iter[2,t] = square_np(a)
-        results_iter[3,t] = exp(a)
-        results_iter[4,t] = cube1(a)
-        results_iter[5,t] = cube2(a)
-        results_iter[6,t] = cube3(a)
-        results_iter[7,t] = Q1(a)
-        results_iter[8,t] = Q2(a)
-        results_iter[9,t] = Q3(a)
-        results_iter[10,t] = atoa(a)
-        results_iter[11,t] = expcube1(a)
-        results_iter[12,t] = expcube2(a)
-        results_iter[13,t] = expcube3(a)
+        results_iter[1,t] = square1(a)
+        results_iter[2,t] = square2(a)
+        results_iter[3,t] = square3(a)
+        results_iter[4,t] = exp(a)
+        results_iter[5,t] = cube1(a)
+        results_iter[6,t] = cube2(a)
+        results_iter[7,t] = cube3(a)
+        results_iter[8,t] = cube4(a)
+        results_iter[9,t] = Q1(a)
+        results_iter[10,t] = Q2(a)
+        results_iter[11,t] = Q3(a)
+        results_iter[12,t] = Q4(a)
+        results_iter[13,t] = atoa(a)
+        results_iter[14,t] = expcube1(a)
+        results_iter[15,t] = expcube2(a)
+        results_iter[16,t] = expcube3(a)
+        results_iter[17,t] = expcube4(a)
 
-    results_df = pd.DataFrame(['rng','square_py','square_np','exp','cube1','cube2','cube3','Q1','Q2','Q3','atoa','expcube1','expcube2','expcube3'],columns=['test'])
+    results_df = pd.DataFrame(['rng','square1','square2','square3','exp','cube1','cube2','cube3','cube4','Q1','Q2','Q3','Q4','atoa','expcube1','expcube2','expcube3','expcube4'],columns=['test'])
     results_df['singlethread_s'] = np.mean(results_iter,axis=1)
 
     results_df.to_csv(r'interim/results_single.csv',index=False)
