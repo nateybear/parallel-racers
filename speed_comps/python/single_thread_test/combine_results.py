@@ -30,4 +30,4 @@ final3 = final2.merge(multi_16,how='inner',on='test')
 
 print(final3)
 
-# final3.to_csv(r'thread_test_results.csv',index=False)
+final3.to_csv(r'thread_test_results.csv',index=False)
