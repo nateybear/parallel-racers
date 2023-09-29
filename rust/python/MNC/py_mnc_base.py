@@ -52,10 +52,10 @@ beta = np.random.uniform(0,1,4)
 
 ### compute CCPs and total log likelihood across choices and consumers ###
 
-@jit
+# @jit
 def LL(beta,W,X,S,choices):
     e_util_ijs = np.exp(beta[0] + (beta[1] + beta[2]*W + beta[3]*S)*X)
-    CCP_ijs = e_util/np.sum(e_util,axis=0)
+    CCP_ijs = e_util_ijs/np.sum(e_util_ijs,axis=0)
     CCP_ij = np.mean(CCP_ijs,axis=2)
     return -1*np.sum(np.log(choices*CCP_ij + (1-choices)*(1-CCP_ij)))
 
@@ -64,12 +64,13 @@ def LL(beta,W,X,S,choices):
 ## start timer
 start = timeit.default_timer()
 
-L_ij = LL(beta,W,X,S,choices)
+total_LL = LL(beta,W,X,S,choices)
 
 ## timer stop and print runtime
 stop = timeit.default_timer()
 
 print('Time: ', (stop - start), 'seconds')
+print(total_LL)
 
     
 
