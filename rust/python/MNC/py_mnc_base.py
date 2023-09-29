@@ -50,16 +50,17 @@ fake parameters
 ## random taste for each product
 beta = np.random.uniform(0,1,4)
 
-### compute CCPs and total log likelihood across choices and consumers ###
 
-# @jit
+'''
+compute CCPs and total log likelihood across choices and consumers
+'''
+
+## the following does not accept @jit decorator because numba does not allow axis calls
 def LL(beta,W,X,S,choices):
     e_util_ijs = np.exp(beta[0] + (beta[1] + beta[2]*W + beta[3]*S)*X)
     CCP_ijs = e_util_ijs/np.sum(e_util_ijs,axis=0)
     CCP_ij = np.mean(CCP_ijs,axis=2)
     return -1*np.sum(np.log(choices*CCP_ij + (1-choices)*(1-CCP_ij)))
-
-
 
 ## start timer
 start = timeit.default_timer()
@@ -71,6 +72,31 @@ stop = timeit.default_timer()
 
 print('Time: ', (stop - start), 'seconds')
 print(total_LL)
+
+
+## modified version to accept @jit
+## nevermind, can't do matrix-vector multiplication to generate sums because numba does not accept 3D arrays for matrix multiplication
+## see https://numba.readthedocs.io/en/0.51.2/reference/numpysupported.html
+
+## try jax.jit -- seems to support
+
+# @jit(nopython=True)
+# @jit(parallel=True)
+# @jit(nopython=True)
+def LL_jit(beta,W,X,S,choices):
+    e_util_ijs = np.exp(beta[0] + (beta[1] + beta[2]*W + beta[3]*S)*X)
+    ## replace sum of exponentials with matrix multiplication on dimension X by vector of 1s of length X
+    # CCP_ijs = e_util_ijs/np.sum(e_util_ijs,axis=0)
+    e_util_sum_axis_pre = np.transpose(e_util_ijs)
+    e_util_sum_axis_0 = np.matmul(np.transpose(e_util_ijs),np.ones((e_util_ijs.shape[0],1)))
+    
+    # test = np.moveaxis(e_util_ijs,0,2)
+    # CCP_ij = np.mean(CCP_ijs,axis=2)
+    # return -1*np.sum(np.log(choices*CCP_ij + (1-choices)*(1-CCP_ij)))
+    return e_util_ijs, CCP_ijs,e_util_sum_axis_pre, e_util_sum_axis_0
+
+e_util_ijs, CCP_ijs,e_util_sum_axis_pre,e_util_sum_axis_0 = LL_jit(beta,W,X,S,choices)
+
 
     
 
