@@ -3,24 +3,14 @@ Write certain numpy operations with and without threads
 Only some numpy operations are threaded
 Number of threads can be controlled with environ variable
 See: https://superfastpython.com/multithreaded-numpy-functions/
-and https://superfastpython.com/numpy-multithreaded-parallelism/
 Determine which operations slow down due to forced single-threading vs. not
 Try single thread, regular numpy, 16 thread (one per core)
 
 note: jit needs to decorate functions that use only numpy/base python behavior, e.g. does not accept default_timer
 '''
-## import thread environment controls
-## NEEDS TO BE CALLED BEFORE PACKAGE IMPORTS (OR BEFORE CALLING SCRIPT)
-
+# import thread environment controls
 # from os import environ
-# N_THREADS = '1'
-# environ['OMP_NUM_THREADS'] = N_THREADS
-# environ['OPENBLAS_NUM_THREADS'] = N_THREADS
-# environ['MKL_NUM_THREADS'] = N_THREADS
-# environ['VECLIB_MAXIMUM_THREADS'] = N_THREADS
-# environ['NUMEXPR_NUM_THREADS'] = N_THREADS
-
-
+# environ['OMP_NUM_THREADS'] = '1'
 from numba import jit
 import timeit
 import numpy as np
@@ -171,50 +161,50 @@ def thread_test(iter,n):
         toc_8 = timeit.default_timer()
         results_iter[8,t] = toc_8 - tic_8    
 
-        # tic_9 = timeit.default_timer()
-        # x9 = Q1(a)
-        # toc_9 = timeit.default_timer()
-        # results_iter[9,t] = toc_9 - tic_9    
+        tic_9 = timeit.default_timer()
+        x9 = Q1(a)
+        toc_9 = timeit.default_timer()
+        results_iter[9,t] = toc_9 - tic_9    
 
-        # tic_10 = timeit.default_timer()
-        # x10 = Q2(a)
-        # toc_10 = timeit.default_timer()
-        # results_iter[10,t] = toc_10 - tic_10    
+        tic_10 = timeit.default_timer()
+        x10 = Q2(a)
+        toc_10 = timeit.default_timer()
+        results_iter[10,t] = toc_10 - tic_10    
 
-        # tic_11 = timeit.default_timer()
-        # x11 = Q3(a)
-        # toc_11 = timeit.default_timer()
-        # results_iter[11,t] = toc_11 - tic_11
+        tic_11 = timeit.default_timer()
+        x11 = Q3(a)
+        toc_11 = timeit.default_timer()
+        results_iter[11,t] = toc_11 - tic_11
 
         tic_12 = timeit.default_timer()
         x12 = Q4(a)
         toc_12 = timeit.default_timer()
         results_iter[12,t] = toc_12 - tic_12
 
-        # tic_13 = timeit.default_timer()
-        # x13 = atoa(a)
-        # toc_13 = timeit.default_timer()
-        # results_iter[13,t] = toc_13 - tic_13   
+        tic_13 = timeit.default_timer()
+        x13 = atoa(a)
+        toc_13 = timeit.default_timer()
+        results_iter[13,t] = toc_13 - tic_13   
 
-        # tic_14 = timeit.default_timer()
-        # x14 = expcube1(a)
-        # toc_14 = timeit.default_timer()
-        # results_iter[14,t] = toc_14 - tic_14    
+        tic_14 = timeit.default_timer()
+        x14 = expcube1(a)
+        toc_14 = timeit.default_timer()
+        results_iter[14,t] = toc_14 - tic_14    
 
-        # tic_15 = timeit.default_timer()
-        # x15 = expcube2(a)
-        # toc_15 = timeit.default_timer()
-        # results_iter[15,t] = toc_15 - tic_15    
+        tic_15 = timeit.default_timer()
+        x15 = expcube2(a)
+        toc_15 = timeit.default_timer()
+        results_iter[15,t] = toc_15 - tic_15    
 
-        # tic_16 = timeit.default_timer()
-        # x16 = expcube3(a)
-        # toc_16 = timeit.default_timer()
-        # results_iter[16,t] = toc_16 - tic_16  
+        tic_16 = timeit.default_timer()
+        x16 = expcube3(a)
+        toc_16 = timeit.default_timer()
+        results_iter[16,t] = toc_16 - tic_16  
 
-        # tic_17 = timeit.default_timer()
-        # x17 = expcube4(a)
-        # toc_17 = timeit.default_timer()
-        # results_iter[17,t] = toc_17 - tic_17   
+        tic_17 = timeit.default_timer()
+        x17 = expcube4(a)
+        toc_17 = timeit.default_timer()
+        results_iter[17,t] = toc_17 - tic_17   
 
 
     results_df = pd.DataFrame(['rng','square1','square2','square3','exp','cube1','cube2','cube3','cube4','Q1','Q2','Q3','Q4','atoa','expcube1','expcube2','expcube3','expcube4'],columns=['test'])

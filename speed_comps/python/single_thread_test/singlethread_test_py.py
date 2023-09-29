@@ -3,12 +3,21 @@ Write certain numpy operations with and without threads
 Only some numpy operations are threaded
 Number of threads can be controlled with environ variable
 See: https://superfastpython.com/multithreaded-numpy-functions/
+and https://superfastpython.com/numpy-multithreaded-parallelism/
 Determine which operations slow down due to forced single-threading vs. not
 Try single thread, regular numpy, 16 thread (one per core)
 '''
-# import thread environment controls
+## import thread environment controls
+## NEEDS TO BE CALLED BEFORE PACKAGE IMPORTS (OR BEFORE CALLING SCRIPT)
+
 from os import environ
-environ['OMP_NUM_THREADS'] = '1'
+N_THREADS = '1'
+environ['OMP_NUM_THREADS'] = N_THREADS
+environ['OPENBLAS_NUM_THREADS'] = N_THREADS
+environ['MKL_NUM_THREADS'] = N_THREADS
+environ['VECLIB_MAXIMUM_THREADS'] = N_THREADS
+environ['NUMEXPR_NUM_THREADS'] = N_THREADS
+
 
 import timeit
 import numpy as np
@@ -159,15 +168,15 @@ def thread_test(iter,n):
         results_iter[6,t] = cube2(a)
         results_iter[7,t] = cube3(a)
         results_iter[8,t] = cube4(a)
-        results_iter[9,t] = Q1(a)
-        results_iter[10,t] = Q2(a)
-        results_iter[11,t] = Q3(a)
+        # results_iter[9,t] = Q1(a)
+        # results_iter[10,t] = Q2(a)
+        # results_iter[11,t] = Q3(a)
         results_iter[12,t] = Q4(a)
-        results_iter[13,t] = atoa(a)
-        results_iter[14,t] = expcube1(a)
-        results_iter[15,t] = expcube2(a)
-        results_iter[16,t] = expcube3(a)
-        results_iter[17,t] = expcube4(a)
+        # results_iter[13,t] = atoa(a)
+        # results_iter[14,t] = expcube1(a)
+        # results_iter[15,t] = expcube2(a)
+        # results_iter[16,t] = expcube3(a)
+        # results_iter[17,t] = expcube4(a)
 
     results_df = pd.DataFrame(['rng','square1','square2','square3','exp','cube1','cube2','cube3','cube4','Q1','Q2','Q3','Q4','atoa','expcube1','expcube2','expcube3','expcube4'],columns=['test'])
     results_df['singlethread_s'] = np.mean(results_iter,axis=1)
