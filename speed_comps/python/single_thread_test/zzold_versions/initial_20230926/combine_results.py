@@ -6,7 +6,6 @@ import subprocess
 progs = ["multithread_test_py.py","singlethread_test_py.py","jit_multithread_test_py.py","explicit_multithread_test_py.py"]
 
 t=0
-print(t)
 for p in progs:
     t+=1
     subprocess.run(["python", p])
