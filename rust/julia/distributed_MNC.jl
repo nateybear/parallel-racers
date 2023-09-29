@@ -13,10 +13,10 @@ end
 ws = rand(capN);  #agent characteristic
 ys = ceil.(Int, capJ.*rand(capN)); #agent choices (fake - Im not actually simulating choices according to model)
 
-individuals = collect(zip(ws, ys))
+mat = [ ws ys ]
 
 function L(b)
-    @sync @distributed (+) for (w, y) in individuals
+    @sync @distributed (+) for (w, y) in eachrow(mat)
         CCPs = @. exp(b[1] + x * (b[2] + b[3] * w + b[4] * draws))
         CCPs = CCPs ./ sum(CCPs, dims = 1)
         CCPs = mean(CCPs, dims = 2)
