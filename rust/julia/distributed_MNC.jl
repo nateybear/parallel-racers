@@ -15,6 +15,25 @@ ys = ceil.(Int, capJ.*rand(capN)); #agent choices (fake - Im not actually simula
 
 mat = [ ws ys ]
 
+function L_all_for(b)
+    @sync @distributed (+) for (w, y) in eachrow(mat)
+        CCPs = zeros(capJ, capS)
+        for (s, draw) in enumerate(draws)
+            sum_exponents = 0.0
+            for (j, xj) in enumerate(x)
+                exponent = exp(b[1] + b[2]*xj + b[3]*w + b[4]*draw)
+                CCPs[j, s] = exponent
+                sum_exponents += exponent
+            end
+            for j in 1:capJ
+                CCPs[j, s] /= sum_exponents
+                CCPs[j, s] = y == j ? log(CCPs[j, s]) : log(1 - CCPs[j, s])
+            end
+        end
+        sum(mean(CCPs, dims=2))    
+    end
+end
+
 function L(b)
     @sync @distributed (+) for (w, y) in eachrow(mat)
         CCPs = @. exp(b[1] + x * (b[2] + b[3] * w + b[4] * draws))
