@@ -34,9 +34,14 @@ function L_all_for(b)
     end
 end
 
-function L(b)
+function L(b, on_main = false)
     @sync @distributed (+) for (w, y) in eachrow(mat)
-        CCPs = @. exp(b[1] + x * (b[2] + b[3] * w + b[4] * draws))
+        product_chars = if on_main
+            @fetchfrom 1 x
+        else
+            x
+        end
+        CCPs = @. exp(b[1] + product_chars * (b[2] + b[3] * w + b[4] * draws))
         CCPs = CCPs ./ sum(CCPs, dims = 1)
         CCPs = mean(CCPs, dims = 2)
         choices = 1:capJ .== y
