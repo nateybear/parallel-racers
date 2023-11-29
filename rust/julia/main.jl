@@ -1,3 +1,9 @@
+### This file does benchmarks for different data sizes
+### Run for single core as
+#### julia --project=. rust/julia/main.jl
+### Run for multiple cores like
+#### julia --project=. --procs=XXX rust/julia/main.jl --multiproc
+
 ### Numerical Libraries
 using LinearAlgebra
 using Statistics
@@ -24,29 +30,25 @@ read_dat(f::String) = @pipe readlines(f) .|>
                             convert(Matrix{Float64}, _)
 
 
-# raw is an iterator
 const raw = @pipe read_dat("../data.asc") .|> convert(Int8, _) |> eachcol
 const N = (first ∘ size ∘ first)(raw)
 
+#### INCLUDE THE LIKELIHOOD
+if length(ARGS) > 0 && ARGS[1] == "--multiproc"
+    include("likelihood_procs.jl")
+    P = nworkers()
+else
+    include("likelihood_implicit.jl")
+    P = 1
+end
 
-#### SAVE THE FIXED POINT AND USE EVERYWHERE
-include("findFixedPoint.jl")
+### Compile benchmarks into df
+const df = DataFrame(nprocs=UInt8[], elapsed=Float64[], size=Int64[])
 
-const LIKELIHOOD_FILES = [
-    "likelihood_implicit.jl",
-    "likelihood_serial.jl",
-    "likelihood_procs.jl"
-]
-
-const df = DataFrame(method=UInt8[], elapsed=Float64[], size=Int64[])
-
-for (i, f) in enumerate(LIKELIHOOD_FILES),
-    multiple in [1, 10, 100, 1000, 10000, 100000]
-
-    include(f)
-    @info "Running $f with multiple=$multiple"
+for multiple in [1, 10, 100, 1000, 10000]
+    @info "Running rust likelihood with multiple=$multiple"
     t = @belapsed likelihood($(repeat.(raw, multiple)))
-    push!(df, (i, t, multiple * N))
+    push!(df, (P, t, multiple * N))
 end
 
 CSV.write(stdout, df)
