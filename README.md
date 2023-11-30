@@ -1,6 +1,3 @@
 # parallel-racers
-🏎️💨 Go go speed racer 
 
-👾👨‍💻 Write Makefile commands and make on different architectures
-
-📖📝 Use the Wiki to write up the results
+Read the Wiki for a tutorial in parallel computing. See the code in the repository for examples in different languages.
