@@ -9,9 +9,6 @@ import timeit
 '''
 Call outputs of data generation and value function iteration
 '''
-## don't use exec (for multiprocess at least) because it calls the program in each process (see mp notes)
-# with open("rust_data_DP_py.py") as f:
-#     exec(f.read())
 
 ## read in conditional (choice specific) value functions
 CVFs = pd.read_csv(r'inputs/CVFs.csv')
@@ -21,16 +18,6 @@ V0_new = CVFs['V0'].values
 ## read in datagen program
 with open("rust_datagen_py.py") as f:
     exec(f.read())
-
-# dat_3 = pd.read_csv(r'inputs/df_order3.csv').values
-# dat_4 = pd.read_csv(r'inputs/df_order4.csv').values
-# dat_5 = pd.read_csv(r'inputs/df_order5.csv').values
-# dat_6 = pd.read_csv(r'inputs/df_order6.csv').values
-# dat_7 = pd.read_csv(r'inputs/df_order7.csv').values
-# dat_8 = pd.read_csv(r'inputs/df_order8.csv').values
-
-# dat_list = [dat_3,dat_4,dat_5,dat_6,dat_7,dat_8]
-
 
 
 '''

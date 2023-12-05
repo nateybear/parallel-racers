@@ -24,8 +24,6 @@ def datagen(df,n_sets):
     dat_list = [0]*n_sets
     ## call 6 to get exp of 5 which will iterate 6 times, producing 1000-100M obs
     for exp in range(n_sets):
-        # df_big = pd.DataFrame(np.block([[df]]*(10**exp)),columns=['a_t','i_t'])
-        # df_big.to_csv(f'inputs\\df_order{exp+3}.csv',index=False)
 
         df_big = np.block([[df]]*(10**exp))
         dat_list[exp] = df_big

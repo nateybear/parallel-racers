@@ -19,7 +19,7 @@ N_sims = 1000
 
 ## Then for some arbitrary fixed parameters beta_0, beta_1, beta_2, 
 ## mean utility for the ith consumer for the jth product for the sth simulation draw is:
-## U_{ijs} = beta_0 + (beta_1+beta_2*W[i]+ S[s])*X[j]
+## U_{ijs} = beta_0 + (beta_1+beta_2*W[i]+ beta_3*S[s])*X[j]
 
 '''
 generate data

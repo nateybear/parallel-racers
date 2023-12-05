@@ -84,7 +84,7 @@ def solveDP(a,a_prime,theta):
 
 V0_new, V1_new = solveDP(a,a_prime,theta)
 
-## write to csv (cannot execute within multiprocess program because of the execution within pool)
+## write to csv
 cond_val_fns = pd.DataFrame(np.hstack((V0_new[:,None], V1_new[:,None])), columns=['V0','V1'])
 
 cond_val_fns.to_csv('inputs\CVFs.csv',index=False)
