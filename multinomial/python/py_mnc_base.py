@@ -53,7 +53,6 @@ beta = np.random.uniform(0,1,4)
 compute CCPs and total log likelihood across choices and consumers
 '''
 
-## the following does not accept @jit decorator because numba does not allow axis calls
 def LL(beta,W,X,S,choices):
     e_util_ijs = np.exp(beta[0] + (beta[1] + beta[2]*W + beta[3]*S)*X)
     ## generate CCP for each consumer and choice (and sim draw)
