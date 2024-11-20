@@ -2,7 +2,7 @@ import numpy as np
 import timeit
 
 '''
-Initial multinomial choice problem speed test - serial
+Initial multinomial choice problem speed test - base python, utilizing vectorization and broadcasting
 '''
 ## 100,000 consumers (each with scalar characteristic W)
 N_cons = 100000
@@ -19,12 +19,14 @@ N_sims = 1000
 '''
 generate data
 '''
+## set random seed
+np.random.seed(1)
 ## consumer chars (100k) 
 W = np.random.uniform(0,1,N_cons)[None,:,None]
 ## product chars (10)  (in a real implementation, these should be sorted by product IDs 1-10, so they correspond with correct rows in the choices matrix)
 X = np.random.uniform(0,1,N_choices)[:,None,None]
 ## random utility (1000 draws)
-S = np.random.uniform(0,1,N_sims)[None,None,:]
+S = np.random.normal(0,1,N_sims)[None,None,:]
 ## fake choices Y, corresponding to product IDs (for the 100k consumers, no explicit outside option for now)
 ## move up by one integer so as not to divide by zero in broadcasting below to compute likelihood for each consumer over choices
 Y = np.random.randint(0,10,N_cons) + 1
@@ -59,7 +61,7 @@ def LL(beta,W,X,S,choices):
     CCP_ijs = e_util_ijs/np.sum(e_util_ijs,axis=0)
     ## integrate-out simulants
     CCP_ij = np.mean(CCP_ijs,axis=2)
-    return -1*np.sum(np.log(choices*CCP_ij + (1-choices)*(1-CCP_ij)))
+    return np.sum(choices*np.log(CCP_ij) + (1-choices)*np.log(1-CCP_ij))
 
 ## start timer
 start = timeit.default_timer()

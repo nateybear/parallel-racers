@@ -2,6 +2,7 @@ import numpy as np
 import timeit
 import jax
 import jax.numpy as jnp
+from jax import random
 
 '''
 Initial multinomial choice problem speed test - serial
@@ -21,12 +22,17 @@ N_sims = 1000
 '''
 generate data
 '''
+## set jax RNG key.  See https://jax.readthedocs.io/en/latest/jax.random.html#module-jax.random
+## updated RNG features to mirror numpy best practices
+# seed = 1701
+# key = random.key(seed)
 ## consumer chars (100k) 
+# W = jax.random.uniform(key,)
 W = jnp.random.uniform(0,1,N_cons)[None,:,None]
 ## product chars (10)  (in a real implementation, these should be sorted by product IDs 1-10, so they correspond with correct rows in the choices matrix)
 X = jnp.random.uniform(0,1,N_choices)[:,None,None]
 ## random utility (1000 draws)
-S = jnp.random.uniform(0,1,N_sims)[None,None,:]
+S = jnp.random.normal(0,1,N_sims)[None,None,:]
 ## fake choices Y, corresponding to product IDs (for the 100k consumers, no explicit outside option for now)
 ## move up by one integer so as not to divide by zero in broadcasting below to compute likelihood for each consumer over choices
 Y = jnp.random.randint(0,10,N_cons) + 1
@@ -62,7 +68,7 @@ def LL(beta,W,X,S,choices):
     CCP_ijs = e_util_ijs/jnp.sum(e_util_ijs,axis=0)
     ## integrate-out simulants
     CCP_ij = jnp.mean(CCP_ijs,axis=2)
-    return -1*jnp.sum(jnp.log(choices*CCP_ij + (1-choices)*(1-CCP_ij)))
+    return jnp.sum(choices*jnp.log(CCP_ij) + (1-choices)*jnp.log(1-CCP_ij))
 
 ## call just in time compilation
 ## need block until ready required due to jax's asynchronous execution model

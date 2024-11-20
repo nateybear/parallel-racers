@@ -29,7 +29,7 @@ W = np.random.uniform(0,1,N_cons)
 ## product chars (10) (in a real implementation, these should be sorted by product IDs 1-10, so they correspond with correct rows in the choices matrix)
 X = np.random.uniform(0,1,N_choices)[:,None]
 ## random utility (1000 draws)
-S = np.random.uniform(0,1,N_sims)[None,:]
+S = np.random.normal(0,1,N_sims)[None,:]
 ## fake choices Y, corresponding to product IDs (for the 100k consumers, no explicit outside option for now)
 ## move up by one integer so as not to divide by zero in broadcasting below to compute likelihood for each consumer over choices
 Y = np.random.randint(0,10,N_cons) + 1
@@ -87,7 +87,7 @@ def LL_jit(beta,W,X,S,choices):
         # CCP_ij = np.matmul(CCP_ijs,np.ones(CCP_ijs.shape[1])[:,None]) / CCP_ijs.shape[1]
         CCP_ij = (CCP_ijs@np.ones(CCP_ijs.shape[1])[:,None]) / CCP_ijs.shape[1]
         choice_ij = choices[:,i]
-        loglike = -1*np.sum(np.log(choice_ij[:,None]*CCP_ij + (1-choice_ij[:,None])*(1-CCP_ij)))
+        loglike = np.sum(choice_ij[:,None]*np.log(CCP_ij) + (1-choice_ij[:,None])*np.log(1-CCP_ij))
         ## cum sum total LL
         LL += loglike
     return LL

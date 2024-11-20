@@ -1,11 +1,10 @@
 import numpy as np
 import timeit
-from multiprocessing import Pool
 import functools
 
 '''
-Initial multinomial choice problem speed test - multiprocess pool (loop over consumer dimension)
-Define functions first, run operations conditional on __name__ == '__main__':
+Initial multinomial choice problem speed test - serial implementation iterating over consumers
+(using base python's map--equivalent of for-loop)
 '''
 def data():
     ## 100,000 consumers (each with scalar characteristic W)
@@ -53,7 +52,7 @@ def data():
     ## random taste for each product
     beta = np.random.uniform(0,1,4)
 
-    ## send consumer array to list iterable for p.map
+    ## send consumer array to list iterable for map
     W_list = W.tolist()
 
     return W_list, X, S, choices, beta
@@ -72,35 +71,31 @@ def comp_CCP(X,S,beta,W_list):
     ## outputs length N_choices vector of CCPs for consumer i
     return CCP_ij
 
-def total_LL(n_processes):
+def total_LL():
 
     W_list, X, S, choices, beta = data()
 
     ### freeze comp_CCP inputs (except iterable) into function signature as positional arguments, to generate partial function
     partial_comp_CCP = functools.partial(comp_CCP,X,S,beta)
 
-    with Pool(n_processes) as p:
-        ## start timer
-        start = timeit.default_timer()
+    ## start timer
+    start = timeit.default_timer()
 
-        ## p.map takes a list of consumer characteristics as iterable and generates a list of the outputs over iteration
-        CCP_ij = np.vstack(p.map(partial_comp_CCP,W_list))
-        total_LL = np.sum(choices*np.log(CCP_ij) + (1-choices)*np.log(1-CCP_ij))
+    ## map takes a list of consumer characteristics as iterable and generates map object of the outputs (which we convert to list) over iteration
+    CCP_ij = np.vstack(list(map(partial_comp_CCP,W_list)))
+    total_LL = np.sum(choices*np.log(CCP_ij) + (1-choices)*np.log(1-CCP_ij))
 
-        ## timer stop and print runtime
-        stop = timeit.default_timer()
-        print('Time: ', (stop - start), 'seconds')
+    ## timer stop and print runtime
+    stop = timeit.default_timer()
+    print('Time: ', (stop - start), 'seconds')
 
     return total_LL
 
 
-if __name__ == '__main__':
-    ## allocate number of cores (out of the 40 available)
-    n_processes = 20
-    tot_LL = total_LL(n_processes)
-    print(tot_LL)
+tot_LL = total_LL()
+print(tot_LL)
 
 
 '''
-Takes about 1.1 seconds on 20 cores
+Takes about 12 seconds serially
 '''
