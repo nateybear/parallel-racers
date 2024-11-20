@@ -22,27 +22,28 @@ N_sims = 1000
 '''
 generate data
 '''
-## set jax RNG key.  See https://jax.readthedocs.io/en/latest/jax.random.html#module-jax.random
-## updated RNG features to mirror numpy best practices
-# seed = 1701
-# key = random.key(seed)
+## set random seed
+## if necessary, use jax's methods for pseudo-RNG that generate RNs that are reproducible, parallelizable, vectorisable
+## https://jax.readthedocs.io/en/latest/random-numbers.html
+## https://jax.readthedocs.io/en/latest/jax.random.html#module-jax.random
+## mirrors numpy's new best-practice for RNG
+np.random.seed(1)
 ## consumer chars (100k) 
-# W = jax.random.uniform(key,)
-W = jnp.random.uniform(0,1,N_cons)[None,:,None]
+W = np.random.uniform(0,1,N_cons)[None,:,None]
 ## product chars (10)  (in a real implementation, these should be sorted by product IDs 1-10, so they correspond with correct rows in the choices matrix)
-X = jnp.random.uniform(0,1,N_choices)[:,None,None]
+X = np.random.uniform(0,1,N_choices)[:,None,None]
 ## random utility (1000 draws)
-S = jnp.random.normal(0,1,N_sims)[None,None,:]
+S = np.random.normal(0,1,N_sims)[None,None,:]
 ## fake choices Y, corresponding to product IDs (for the 100k consumers, no explicit outside option for now)
 ## move up by one integer so as not to divide by zero in broadcasting below to compute likelihood for each consumer over choices
-Y = jnp.random.randint(0,10,N_cons) + 1
+Y = np.random.randint(0,10,N_cons) + 1
 ## sorted product_IDs
-prod_IDs = jnp.arange(10).astype(int) + 1
+prod_IDs = np.arange(10).astype(int) + 1
 ## auxiliary matrix
 ## divide broadcast individual choices over the product IDs to get a 1 for each consumer's actual choice
 ## in a matrix of n_prods by n_cons
 aux = Y[None,:] / prod_IDs[:,None]
-choices = jnp.zeros((aux.shape[0],aux.shape[1]))
+choices = np.zeros((aux.shape[0],aux.shape[1]))
 choices[aux==1] = 1
 
 
@@ -54,7 +55,7 @@ fake parameters
 ## mean utility for characteristic
 ## agent-specific utility
 ## random taste for each product
-beta = jnp.random.uniform(0,1,4)
+beta = np.random.uniform(0,1,4)
 
 
 '''
