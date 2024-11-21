@@ -97,5 +97,5 @@ print(tot_LL)
 
 
 '''
-Takes about 12 seconds serially
+Takes about 11 seconds serially, looping over consumers
 '''
