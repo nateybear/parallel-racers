@@ -64,9 +64,9 @@ def comp(draws,iter):
     py_for_times = np.hstack(list(map(pyexp_for_partial,range(iter))))
     mean_py_for_time = np.mean(py_for_times)
 
-    print(f'np.exp time over 100 runs, 10^6 obs: {mean_np_time}')
-    print(f'mapped math.exp time over 100 runs, 10^6 obs: {mean_np_time}')
-    print(f'for-loop math.exp time over 100 runs, 10^6 obs: {mean_np_time}')
+    print(f'np.exp time over 100 runs, 10^6 draws: {mean_np_time} milliseconds')
+    print(f'mapped math.exp time over 100 runs, 10^6 draws: {mean_py_map_time} milliseconds')
+    print(f'for-loop math.exp time over 100 runs, 10^6 draws: {mean_py_for_time} milliseconds')
 
     return mean_np_time, mean_py_map_time, mean_py_for_time
 
