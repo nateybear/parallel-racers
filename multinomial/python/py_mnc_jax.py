@@ -10,7 +10,7 @@ jax.config.update('jax_platform_name', 'cpu')
 ## https://stackoverflow.com/questions/74537026/execute-function-specifically-on-cpu-in-jax
 
 '''
-Initial multinomial choice problem speed test - serial
+Initial multinomial choice problem speed test - JIT compilation
 '''
 ## 100,000 consumers (each with scalar characteristic W)
 N_cons = 100000
